@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>thought — alvakry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Theme tokens ── */
+    [data-theme="light"] {
+      --bg:        #f8f7f5;
+      --bg-nav:    rgba(248,247,245,0.88);
+      --fg:        #0d0d0d;
+      --muted:     #888;
+      --border:    rgba(0,0,0,0.09);
+      --accent2:   #c8ff00;
+      --body-text: #444;
+    }
+    [data-theme="dark"] {
+      --bg:        #0e0e0e;
+      --bg-nav:    rgba(14,14,14,0.88);
+      --fg:        #f0ede8;
+      --muted:     #666;
+      --border:    rgba(255,255,255,0.09);
+      --accent2:   #c8ff00;
+      --body-text: #aaa;
+    }
+
+    :root {
+      --max:  720px;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Space Grotesk', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      line-height: 1.65;
+      padding: 0 1.5rem;
+      cursor: none;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── Custom cursor ── */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--fg);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+      mix-blend-mode: difference;
+    }
+    .cursor.grow { width: 36px; height: 36px; background: var(--accent2); }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: var(--max); margin: 0 auto; }
+
+    section { padding: 5rem 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 1.5rem;
+      position: sticky; top: 0;
+      background: var(--bg-nav);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 100;
+      margin: 0 -1.5rem;
+      transition: background 0.3s;
+      gap: 1rem;
+    }
+
+    .nav-name {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      color: var(--fg);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .nav-name span { color: var(--muted); font-style: italic; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .nav-links a::before { content: './'; opacity: 0.4; }
+    .nav-links a:hover { color: var(--fg); }
+
+    /* ── Nav controls (theme + lang) ── */
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-shrink: 0;
+    }
+
+    /* Theme pill */
+    .theme-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.26rem 0.7rem;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .theme-btn:hover { color: var(--fg); border-color: var(--fg); }
+
+    /* Lang pills */
+    .lang-toggle {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .lang-toggle button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      padding: 0.26rem 0.65rem;
+      transition: background 0.15s, color 0.15s;
+    }
+    .lang-toggle button.active {
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    /* ── Status badge ── */
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+      animation: pulse 2.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    @keyframes glitch {
+      0%  { transform: translate(0);        opacity: 0; }
+      92% { transform: translate(0);        opacity: 0; }
+      93% { transform: translate(-3px,1px); opacity: 0.6; }
+      94% { transform: translate(3px,-1px); opacity: 0.6; }
+      95% { transform: translate(0);        opacity: 0; }
+      97% { transform: translate(2px,2px);  opacity: 0.6; }
+      98% { transform: translate(0);        opacity: 0; }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 2.5rem 0 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    footer span {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    footer .footer-status { font-style: italic; }
+
+    /* ── Hamburger ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 32px; height: 32px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px; height: 1.5px;
+      background: var(--fg);
+      transition: transform 0.25s, opacity 0.25s;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ── Mobile drawer ── */
+    .mobile-drawer {
+      display: none;
+      position: fixed; inset: 0;
+      background: var(--bg);
+      z-index: 150;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 3rem 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, background 0.3s;
+    }
+    .mobile-drawer.open { opacity: 1; pointer-events: all; }
+
+    .mobile-drawer ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .mobile-drawer ul a {
+      font-family: var(--sans);
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+      text-decoration: none;
+    }
+
+    .drawer-controls {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 2.5rem;
+    }
+
+    .drawer-foot {
+      position: absolute;
+      bottom: 3rem; left: 2rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── i18n visibility ── */
+    [data-lang="en"] [lang="id"] { display: none; }
+    [data-lang="id"] [lang="en"] { display: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) and (min-width: 601px) {
+      .nav-links { gap: 1rem; }
+      .nav-links a::before { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      body  { cursor: auto; }
+      .cursor { display: none; }
+      html  { font-size: clamp(14px, 4vw, 16px); }
+
+      .nav-links    { display: none; }
+      .nav-controls { display: none; }
+      .hamburger    { display: flex; }
+      .mobile-drawer { display: flex; }
+
+      footer { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+    }
+
+    @media (max-width: 380px) {
+      body { padding: 0 1rem; }
+      nav  { margin: 0 -1rem; padding-left: 1rem; padding-right: 1rem; }
+      .mobile-drawer ul a { font-size: 1.8rem; }
+    }
+
+    /* ── Thought detail ── */
+    .detail-page { padding: 4rem 0 6rem; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      margin-bottom: 3rem;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--fg); }
+    .thought-header { margin-bottom: 3rem; }
+    .thought-date {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .thought-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+    .thought-body {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--body-text);
+      max-width: 640px;
+    }
+    .thought-body p { margin-bottom: 1.5rem; }
+    .thought-body p:last-child { margin-bottom: 0; }
+    .not-found {
+      padding: 6rem 0;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    @media (max-width: 600px) {
+      .detail-page { padding: 2.5rem 0 4rem; }
+      .back-link { margin-bottom: 2rem; }
+      .thought-title { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<div class="container">
+  <nav>
+    <a class="nav-name" href="index.html">alvakry<span>.exe</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#work"     data-i18n="nav.work"></a></li>
+      <li><a href="index.html#about"    data-i18n="nav.about"></a></li>
+      <li><a href="index.html#thoughts" data-i18n="nav.thoughts"></a></li>
+      <li><a href="index.html#contact"  data-i18n="nav.contact"></a></li>
+    </ul>
+    <div class="nav-controls">
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">
+        <span id="themeIcon">☾</span>
+        <span id="themeLabel">dark</span>
+      </button>
+      <div class="lang-toggle">
+        <button id="btnEN" class="active" onclick="setLang('en')">EN</button>
+        <button id="btnID" onclick="setLang('id')">ID</button>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+
+<div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+  <ul>
+    <li><a href="index.html#work"     class="drawer-link" data-i18n="nav.work"></a></li>
+    <li><a href="index.html#about"    class="drawer-link" data-i18n="nav.about"></a></li>
+    <li><a href="index.html#thoughts" class="drawer-link" data-i18n="nav.thoughts"></a></li>
+    <li><a href="index.html#contact"  class="drawer-link" data-i18n="nav.contact"></a></li>
+  </ul>
+  <div class="drawer-controls">
+    <button class="theme-btn" id="themeBtnMobile" aria-label="Toggle theme">
+      <span id="themeIconM">☾</span>
+      <span id="themeLabelM">dark</span>
+    </button>
+    <div class="lang-toggle">
+      <button id="btnENM" class="active" onclick="setLang('en')">EN</button>
+      <button id="btnIDM" onclick="setLang('id')">ID</button>
+    </div>
+  </div>
+  <p class="drawer-foot">alvakry.exe — v2.0</p>
+</div>
+
+<div class="container">
+  <div class="detail-page" id="detail">
+    <!-- content injected by JS -->
+  </div>
+
+  <footer>
+    <span>
+      <span lang="en">© 2026 alvakry — all rights reserved, none enforced</span>
+      <span lang="id">© 2026 alvakry — semua hak dilindungi, tidak ada yang menegakkan</span>
+    </span>
+    <span class="footer-status">
+      <span lang="en">handcrafted · no subsidies received</span>
+      <span lang="id">dibuat tangan · tidak menerima subsidi</span>
+    </span>
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+  /* ── i18n ── */
+  const strings = {
+    en: { 'nav.work':'work', 'nav.about':'about', 'nav.thoughts':'thoughts', 'nav.contact':'contact' },
+    id: { 'nav.work':'karya', 'nav.about':'tentang', 'nav.thoughts':'pikiran', 'nav.contact':'kontak' }
+  };
+
+  function setLang(lang) {
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = strings[lang][el.dataset.i18n] || '';
+    });
+    ['btnEN','btnENM'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active', lang === 'en');
+    });
+    ['btnID','btnIDM'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active', lang === 'id');
+    });
+    localStorage.setItem('lang', lang);
+    renderThought(lang);
+  }
+
+  /* ── Theme ── */
+  function applyTheme(theme) {
+    const isDark = theme === 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    const icon  = isDark ? '☀︎' : '☾';
+    const label = isDark ? 'light' : 'dark';
+    document.getElementById('themeIcon').textContent   = icon;
+    document.getElementById('themeLabel').textContent  = label;
+    document.getElementById('themeIconM').textContent  = icon;
+    document.getElementById('themeLabelM').textContent = label;
+    localStorage.setItem('theme', theme);
+  }
+
+  function toggleTheme() {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  }
+
+  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+  document.getElementById('themeBtnMobile').addEventListener('click', toggleTheme);
+
+  /* ── Init ── */
+  (function init() {
+    const savedTheme = localStorage.getItem('theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const savedLang = localStorage.getItem('lang') || 'en';
+    applyTheme(savedTheme);
+    setLang(savedLang);
+  })();
+
+  /* ── Custom cursor (pointer devices only) ── */
+  const cursor = document.getElementById('cursor');
+  if (!window.matchMedia('(hover: none)').matches) {
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+    });
+  }
+
+  /* ── Hamburger ── */
+  const hamburger = document.getElementById('hamburger');
+  const drawer    = document.getElementById('mobileDrawer');
+
+  function toggleMenu(open) {
+    hamburger.classList.toggle('open', open);
+    drawer.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', String(open));
+    drawer.setAttribute('aria-hidden', String(!open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  hamburger.addEventListener('click', () => toggleMenu(!hamburger.classList.contains('open')));
+  document.querySelectorAll('.drawer-link').forEach(l => l.addEventListener('click', () => toggleMenu(false)));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
+
+  /* ── Render thought detail ── */
+  function renderThought(lang) {
+    lang = lang || document.documentElement.getAttribute('data-lang') || 'en';
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const detail = document.getElementById('detail');
+    if (!window.PORTFOLIO_DATA || !id) {
+      detail.innerHTML = '<div class="not-found">not found.</div>';
+      return;
+    }
+    const thought = PORTFOLIO_DATA.thoughts.find(t => t.id === id);
+    if (!thought) {
+      detail.innerHTML = '<div class="not-found"><span lang="en">thought not found — it may have been redacted. Wouldn\'t be the first time.</span><span lang="id">tidak ditemukan — mungkin sudah disunting. Bukan yang pertama.</span></div>';
+      return;
+    }
+    const backText = lang === 'id' ? '← kembali' : '← back';
+    const title = typeof thought.title === 'object' ? (thought.title[lang] || thought.title.en) : thought.title;
+    const body  = typeof thought.body === 'object' ? (thought.body[lang] || thought.body.en) : thought.body;
+    detail.innerHTML =
+      '<a class="back-link" href="index.html">' + backText + '</a>' +
+      '<div class="thought-header">' +
+        '<p class="thought-date">' + thought.date + '</p>' +
+        '<h1 class="thought-title">' + title + '</h1>' +
+      '</div>' +
+      '<div class="thought-body">' + body + '</div>';
+    if (!window.matchMedia('(hover: none)').matches) {
+      detail.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor && cursor.classList.add('grow'));
+        el.addEventListener('mouseleave', () => cursor && cursor.classList.remove('grow'));
+      });
+    }
+    document.title = title + ' — alvakry';
+  }
+
+  /* ── Scroll fade-in ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity   = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.detail-page').forEach(el => {
+    el.style.opacity    = '0';
+    el.style.transform  = 'translateY(18px)';
+    el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
