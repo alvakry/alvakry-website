@@ -978,6 +978,40 @@
   /* initial render after data.js loaded */
   renderProjects();
   renderThoughts();
+
+  /* ── Secret admin access — type "alvakry" anywhere ── */
+  (function() {
+    var secret = 'alvakry';
+    var buffer = '';
+    var timer  = null;
+
+    document.addEventListener('keydown', function(e) {
+      /* ignore if user is typing in an input/textarea */
+      var tag = document.activeElement && document.activeElement.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+      buffer += e.key.toLowerCase();
+
+      /* only keep last N chars matching secret length */
+      if (buffer.length > secret.length) {
+        buffer = buffer.slice(buffer.length - secret.length);
+      }
+
+      /* reset buffer after 2s of inactivity */
+      clearTimeout(timer);
+      timer = setTimeout(function() { buffer = ''; }, 2000);
+
+      if (buffer === secret) {
+        buffer = '';
+        /* subtle visual feedback before redirect */
+        document.body.style.transition = 'opacity 0.4s ease';
+        document.body.style.opacity    = '0';
+        setTimeout(function() {
+          window.location.href = 'admin.html';
+        }, 400);
+      }
+    });
+  })();
 </script>
 </body>
 </html>
