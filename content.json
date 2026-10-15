@@ -24,9 +24,20 @@
   "works": [
     {
       "id": "orbital-dashboard",
-      "title": { "en": "Orbital Dashboard", "id": "Orbital Dashboard" },
-      "category": { "en": "Design & Dev", "id": "Desain & Dev" },
+      "title": {
+        "en": "URL X-Ray",
+        "id": "URL X-Ray"
+      },
+      "category": {
+        "en": "Tools",
+        "id": "Tools"
+      },
       "year": "2026",
+      "tags": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
       "description": {
         "en": "SaaS analytics — data should look as good as the excuses made from it",
         "id": "Analitik SaaS — data harus sebagus alasan yang dibuat darinya"
@@ -34,13 +45,18 @@
       "body": {
         "en": "<p>Orbital Dashboard started as a weekend prototype and turned into a six-month obsession. The brief was simple: make complex analytics readable without making them dishonest. Unlike budget transparency reports, this one actually works.</p><p>The design system is built around information density — every pixel earns its place. Charts are ruthlessly simplified. Filters are surfaced where users actually need them, not buried in a settings panel that loads in 4 seconds like a government website.</p><p>Stack: TypeScript, React, Recharts, a lot of custom SVG, and one regrettable decision involving WebSockets that I will not be discussing further.</p>",
         "id": "<p>Orbital Dashboard dimulai sebagai prototipe akhir pekan dan berubah menjadi obsesi enam bulan. Briefnya sederhana: buat analitik kompleks bisa dibaca tanpa membuatnya tidak jujur. Tidak seperti laporan transparansi anggaran, yang ini benar-benar bekerja.</p><p>Sistem desain dibangun di sekitar kepadatan informasi — setiap piksel harus berjasa. Chart disederhanakan tanpa ampun. Filter dimunculkan di tempat pengguna benar-benar membutuhkannya, bukan tersembunyi di panel pengaturan yang loading-nya 4 detik seperti website pemerintah.</p><p>Stack: TypeScript, React, Recharts, banyak SVG custom, dan satu keputusan menyesal soal WebSocket yang tidak akan saya bahas lebih lanjut.</p>"
-      },
-      "tags": ["SaaS", "React", "TypeScript", "Data Viz"]
+      }
     },
     {
       "id": "voidmarket",
-      "title": { "en": "Voidmarket", "id": "Voidmarket" },
-      "category": { "en": "UI / UX", "id": "UI / UX" },
+      "title": {
+        "en": "Voidmarket",
+        "id": "Voidmarket"
+      },
+      "category": {
+        "en": "UI / UX",
+        "id": "UI / UX"
+      },
       "year": "2025",
       "description": {
         "en": "E-commerce redesign — checkout 3× faster, unlike public services",
@@ -50,12 +66,23 @@
         "en": "<p>Voidmarket's original checkout flow had 7 steps, 3 redirects, and the soul of a DMV queue. The redesign reduced it to 2 steps and a confirmation. Conversion rate went up 40%.</p><p>The visual language leans dark and editorial — high contrast, generous whitespace, product imagery that doesn't need a filter. Every interaction state was designed before a single line of code was written.</p><p>Delivered: full Figma component library, interaction prototype, and a handoff document so detailed the engineers actually liked it. First time for everything.</p>",
         "id": "<p>Alur checkout Voidmarket yang asli punya 7 langkah, 3 redirect, dan semangat antrean Disdukcapil. Redesain mereduksinya menjadi 2 langkah dan konfirmasi. Conversion rate naik 40%.</p><p>Bahasa visual yang gelap dan editorial — kontras tinggi, whitespace luas, foto produk yang tidak butuh filter. Setiap interaction state didesain sebelum satu baris kode pun ditulis.</p><p>Yang diserahkan: full Figma component library, interaction prototype, dan dokumen handoff yang begitu detail sampai para engineer menyukainya. Pertama kali untuk segalanya.</p>"
       },
-      "tags": ["E-commerce", "Figma", "UX Research", "Conversion"]
+      "tags": [
+        "E-commerce",
+        "Figma",
+        "UX Research",
+        "Conversion"
+      ]
     },
     {
       "id": "subtext-cli",
-      "title": { "en": "Subtext CLI", "id": "Subtext CLI" },
-      "category": { "en": "Engineering", "id": "Engineering" },
+      "title": {
+        "en": "Subtext CLI",
+        "id": "Subtext CLI"
+      },
+      "category": {
+        "en": "Engineering",
+        "id": "Engineering"
+      },
       "year": "2025",
       "description": {
         "en": "Open-source tool — more transparent than a budget report",
@@ -65,12 +92,23 @@
         "en": "<p>Subtext CLI is a command-line tool for managing content-heavy static sites without a CMS that requires a 6-month procurement process and a dedicated server running Windows Server 2003.</p><p>It processes markdown with frontmatter, generates static HTML, handles i18n, and ships with a development server that hot-reloads. The whole thing is under 800 lines of Node.js. The source is open, the code is commented, and the decisions are explained.</p><p>Used in production on three client sites. Zero uptime incidents. More reliable than most infrastructure I didn't build.</p>",
         "id": "<p>Subtext CLI adalah tool command-line untuk mengelola situs statis yang konten-heavy tanpa CMS yang membutuhkan proses pengadaan 6 bulan dan server dedicated yang masih pakai Windows Server 2003.</p><p>Tool ini memproses markdown dengan frontmatter, menghasilkan HTML statis, menangani i18n, dan hadir dengan development server yang hot-reload. Semuanya di bawah 800 baris Node.js.</p><p>Dipakai di produksi pada tiga situs klien. Zero insiden uptime. Lebih andal dari sebagian besar infrastruktur yang tidak saya bangun.</p>"
       },
-      "tags": ["Node.js", "CLI", "Open Source", "Static Sites"]
+      "tags": [
+        "Node.js",
+        "CLI",
+        "Open Source",
+        "Static Sites"
+      ]
     },
     {
       "id": "ledge",
-      "title": { "en": "Ledge — Mobile Banking UI", "id": "Ledge — UI Perbankan Mobile" },
-      "category": { "en": "Product Design", "id": "Desain Produk" },
+      "title": {
+        "en": "Ledge — Mobile Banking UI",
+        "id": "Ledge — UI Perbankan Mobile"
+      },
+      "category": {
+        "en": "Product Design",
+        "id": "Desain Produk"
+      },
       "year": "2024",
       "description": {
         "en": "Banking app for humans, not bureaucrats",
@@ -80,7 +118,12 @@
         "en": "<p>Ledge was a concept project for a mobile banking app designed around the radical idea that users should understand what is happening to their money. A concept apparently too advanced for several incumbent banks I will not name.</p><p>The UI system is built on accessibility-first principles — WCAG AA throughout, tested with real screen readers. Every transaction has a clear label, every notification has an off switch.</p><p>Prototyped in Figma. 140+ screens. Would have shipped in Q2 if anyone had asked.</p>",
         "id": "<p>Ledge adalah proyek konsep untuk aplikasi perbankan mobile yang didesain berdasarkan ide radikal bahwa pengguna seharusnya memahami apa yang terjadi pada uang mereka. Sebuah konsep yang ternyata terlalu canggih bagi beberapa bank incumbent yang tidak akan saya sebutkan namanya.</p><p>Sistem UI dibangun di atas prinsip accessibility-first — WCAG AA di seluruh aplikasi, diuji dengan screen reader nyata. Setiap transaksi punya label yang jelas, setiap notifikasi punya tombol off.</p><p>Diprototipi di Figma. 140+ layar. Seharusnya rilis Q2 kalau ada yang mau bertanya.</p>"
       },
-      "tags": ["Fintech", "Mobile", "Accessibility", "Figma"]
+      "tags": [
+        "Fintech",
+        "Mobile",
+        "Accessibility",
+        "Figma"
+      ]
     }
   ],
   "thoughts": [
