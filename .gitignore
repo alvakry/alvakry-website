@@ -1,0 +1,15 @@
+# ── Admin panel — keep local only, never push ──
+admin.html
+
+# ── OS & editor junk ──
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# ── Local dev notes ──
+*.local
+*.log
+notes.txt
+TODO.txt
