@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>thought — alvakry</title>
+  <title>work — alvakry</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -329,8 +329,9 @@
       .mobile-drawer ul a { font-size: 1.8rem; }
     }
 
-    /* ── Thought detail ── */
+    /* ── Work detail ── */
     .detail-page { padding: 4rem 0 6rem; }
+
     .back-link {
       display: inline-flex;
       align-items: center;
@@ -344,38 +345,75 @@
       transition: color 0.15s;
     }
     .back-link:hover { color: var(--fg); }
-    .thought-header { margin-bottom: 3rem; }
-    .thought-date {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      margin-bottom: 1rem;
-    }
-    .thought-title {
+
+    .work-header { margin-bottom: 3rem; }
+
+    .work-title {
       font-size: clamp(1.8rem, 4vw, 2.8rem);
       font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.15;
+      margin-bottom: 1rem;
     }
-    .thought-body {
+
+    .work-meta {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .work-meta .tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.65rem;
+      border-radius: 2px;
+      color: var(--muted);
+    }
+    .work-meta .tag.accent {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .work-body {
       font-size: 1rem;
       line-height: 1.85;
       color: var(--body-text);
       max-width: 640px;
     }
-    .thought-body p { margin-bottom: 1.5rem; }
-    .thought-body p:last-child { margin-bottom: 0; }
+    .work-body p { margin-bottom: 1.5rem; }
+    .work-body p:last-child { margin-bottom: 0; }
+
+    .work-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .work-tags .tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.65rem;
+      border-radius: 2px;
+      color: var(--muted);
+    }
+
     .not-found {
       padding: 6rem 0;
       font-family: var(--mono);
       font-size: 0.85rem;
       color: var(--muted);
     }
+
     @media (max-width: 600px) {
       .detail-page { padding: 2.5rem 0 4rem; }
       .back-link { margin-bottom: 2rem; }
-      .thought-title { font-size: 1.6rem; }
+      .work-title { font-size: 1.6rem; }
     }
   </style>
 </head>
@@ -468,7 +506,7 @@
       if (el) el.classList.toggle('active', lang === 'id');
     });
     localStorage.setItem('lang', lang);
-    renderThought(lang);
+    renderWork(lang);
   }
 
   /* ── Theme ── */
@@ -529,46 +567,64 @@
   document.querySelectorAll('.drawer-link').forEach(l => l.addEventListener('click', () => toggleMenu(false)));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
 
-  /* ── Render thought detail ── */
-  function renderThought(lang) {
+  /* ── Render work detail ── */
+  function renderWork(lang) {
     lang = lang || document.documentElement.getAttribute('data-lang') || 'en';
     const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
+    const id     = params.get('id');
     const detail = document.getElementById('detail');
+
     if (!window.PORTFOLIO_DATA || !id) {
-      detail.innerHTML = '<div class="not-found">not found.</div>';
+      detail.innerHTML = '<div class="not-found"><span lang="en">work not found.</span><span lang="id">karya tidak ditemukan.</span></div>';
       return;
     }
-    const thought = PORTFOLIO_DATA.thoughts.find(t => t.id === id);
-    if (!thought) {
-      detail.innerHTML = '<div class="not-found"><span lang="en">thought not found — it may have been redacted. Wouldn\'t be the first time.</span><span lang="id">tidak ditemukan — mungkin sudah disunting. Bukan yang pertama.</span></div>';
+
+    const work = PORTFOLIO_DATA.works.find(w => w.id === id);
+
+    if (!work) {
+      detail.innerHTML = '<div class="not-found">' +
+        '<span lang="en">work not found — it may have been moved, deleted, or never existed in the first place, much like certain policy documents.</span>' +
+        '<span lang="id">karya tidak ditemukan — mungkin sudah dipindah, dihapus, atau memang tidak pernah ada, seperti beberapa dokumen kebijakan.</span>' +
+        '</div>';
       return;
     }
+
     const backText = lang === 'id' ? '← kembali' : '← back';
-    const title = typeof thought.title === 'object' ? (thought.title[lang] || thought.title.en) : thought.title;
-    const body  = typeof thought.body === 'object' ? (thought.body[lang] || thought.body.en) : thought.body;
+    const title    = typeof work.title    === 'object' ? (work.title[lang]    || work.title.en)    : work.title;
+    const cat      = typeof work.category === 'object' ? (work.category[lang] || work.category.en) : work.category;
+    const body     = typeof work.body     === 'object' ? (work.body[lang]     || work.body.en)     : work.body;
+    const tags     = (work.tags || []).map(t => '<span class="tag">' + t + '</span>').join('');
+
     detail.innerHTML =
       '<a class="back-link" href="index.html">' + backText + '</a>' +
-      '<div class="thought-header">' +
-        '<p class="thought-date">' + thought.date + '</p>' +
-        '<h1 class="thought-title">' + title + '</h1>' +
+      '<div class="work-header">' +
+        '<h1 class="work-title">' + title + '</h1>' +
+        '<div class="work-meta">' +
+          '<span class="tag accent">' + cat + '</span>' +
+          '<span class="tag">' + work.year + '</span>' +
+        '</div>' +
       '</div>' +
-      '<div class="thought-body">' + body + '</div>';
+      '<div class="work-body">' + body + '</div>' +
+      (tags ? '<div class="work-tags">' + tags + '</div>' : '');
+
+    /* reattach cursor hover to injected elements */
     if (!window.matchMedia('(hover: none)').matches) {
       detail.querySelectorAll('a, button').forEach(el => {
         el.addEventListener('mouseenter', () => cursor && cursor.classList.add('grow'));
         el.addEventListener('mouseleave', () => cursor && cursor.classList.remove('grow'));
       });
     }
+
     document.title = title + ' — alvakry';
   }
 
   /* ── Wait for async data then render ── */
   if (window.PORTFOLIO_DATA) {
-    renderThought();
+    renderWork();
   } else {
-    document.addEventListener('portfolioReady', function() { renderThought(); });
+    document.addEventListener('portfolioReady', function() { renderWork(); });
   }
+
   /* ── Scroll fade-in ── */
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
