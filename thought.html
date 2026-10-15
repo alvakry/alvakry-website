@@ -563,6 +563,12 @@
     document.title = title + ' — alvakry';
   }
 
+  /* ── Wait for async data then render ── */
+  if (window.PORTFOLIO_DATA) {
+    renderThought();
+  } else {
+    document.addEventListener('portfolioReady', function() { renderThought(); });
+  }
   /* ── Scroll fade-in ── */
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -579,6 +585,25 @@
     el.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
     io.observe(el);
   });
+
+  /* ── Secret admin access — type "alvakry" anywhere ── */
+  (function() {
+    var secret = 'alvakry', buffer = '', timer = null;
+    document.addEventListener('keydown', function(e) {
+      var tag = document.activeElement && document.activeElement.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      buffer += e.key.toLowerCase();
+      if (buffer.length > secret.length) buffer = buffer.slice(buffer.length - secret.length);
+      clearTimeout(timer);
+      timer = setTimeout(function() { buffer = ''; }, 2000);
+      if (buffer === secret) {
+        buffer = '';
+        document.body.style.transition = 'opacity 0.4s ease';
+        document.body.style.opacity = '0';
+        setTimeout(function() { window.location.href = 'admin.html'; }, 400);
+      }
+    });
+  })();
 </script>
 </body>
 </html>
