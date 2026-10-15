@@ -975,9 +975,18 @@
     renderThoughts();
   };
 
-  /* initial render after data.js loaded */
-  renderProjects();
-  renderThoughts();
+  /* ── Wait for async GitHub fetch, then render ── */
+  function doRender() {
+    renderProjects();
+    renderThoughts();
+  }
+
+  if (window.PORTFOLIO_DATA) {
+    /* data already loaded (unlikely but safe) */
+    doRender();
+  } else {
+    document.addEventListener('portfolioReady', doRender);
+  }
 
   /* ── Secret admin access — type "alvakry" anywhere ── */
   (function() {
